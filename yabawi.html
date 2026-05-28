@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>등교 시간 - 야바위 게임</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app" data-game="shell">
+      <section class="screen shell-theme active">
+        <div class="layout">
+          <article class="stage shell-stage" aria-live="polite">
+            <p class="campaign-label">2026 선도부 도박 예방 캠페인</p>
+
+            <div class="shell-cover shell-view active" data-shell-view="cover">
+              <div class="casino-deck left-deck" aria-hidden="true">
+                <span>A</span>
+                <span>K</span>
+                <span>Q</span>
+              </div>
+              <div class="cover-content">
+                <div class="cover-cups" aria-hidden="true">
+                  <span class="cup small"></span>
+                  <span class="cup small"></span>
+                  <span class="cup small"></span>
+                </div>
+                <h1>야바위 게임</h1>
+                <p>처음은 장난, 끝은 중독</p>
+                <button class="primary-action red-action" data-shell-start>시작하기</button>
+              </div>
+              <div class="casino-deck right-deck" aria-hidden="true">
+                <span>J</span>
+                <span>10</span>
+                <span>9</span>
+              </div>
+            </div>
+
+            <div class="shell-pick shell-view" data-shell-view="pick">
+              <h2 id="shellPrompt">컵 안의 공이 어디에 있을까요?</h2>
+              <div class="cup-row" id="shellCups">
+                <button class="cup-choice" data-cup="0" aria-label="왼쪽 컵 선택">
+                  <span class="shell-ball" aria-hidden="true"></span>
+                  <span class="cup"></span>
+                </button>
+                <button class="cup-choice" data-cup="1" aria-label="가운데 컵 선택">
+                  <span class="shell-ball" aria-hidden="true"></span>
+                  <span class="cup"></span>
+                </button>
+                <button class="cup-choice" data-cup="2" aria-label="오른쪽 컵 선택">
+                  <span class="shell-ball" aria-hidden="true"></span>
+                  <span class="cup"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="shell-shuffle shell-view" data-shell-view="shuffle">
+              <h2>잘 보고 맞혀보세요!</h2>
+              <div class="shuffle-board">
+                <span class="metal-ball" aria-hidden="true"></span>
+                <span class="moving-cup cup-a"></span>
+                <span class="moving-cup cup-b"></span>
+                <span class="moving-cup cup-c"></span>
+              </div>
+            </div>
+
+            <div class="warning-view shell-view" data-shell-view="warning">
+              <div class="warning-sign" aria-hidden="true">!</div>
+              <h2>속지 마!</h2>
+              <p>도박은 조작될 수 있습니다</p>
+              <strong>도박 문제 상담 1336</strong>
+              <button class="dark-action" data-reset>처음으로</button>
+            </div>
+          </article>
+
+          <aside class="guide-panel shell-guide">
+            <div class="guide-visual" aria-hidden="true">
+              <span class="cup tiny"></span>
+              <span class="cup tiny"></span>
+              <span class="cup tiny"></span>
+            </div>
+            <h2>야바위 게임</h2>
+            <p>컵 안의 공 위치를 맞히는 게임입니다.</p>
+            <strong>속임수에 주의하세요!</strong>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

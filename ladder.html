@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>점심시간 - 사다리타기</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app" data-game="ladder">
+      <section class="screen ladder-theme active">
+        <div class="layout">
+          <article class="stage ladder-stage" aria-live="polite">
+            <p class="campaign-label">2026 선도부 도박 예방 캠페인</p>
+
+            <div class="ladder-cover ladder-view active" data-ladder-view="cover">
+              <div class="gold-dust" aria-hidden="true"></div>
+              <h1>사다리타기</h1>
+              <p>원하는 번호를 선택하세요</p>
+              <div class="number-row">
+                <button class="number-choice" data-number="1">1</button>
+                <button class="number-choice" data-number="2">2</button>
+                <button class="number-choice" data-number="3">3</button>
+                <button class="number-choice" data-number="4">4</button>
+                <button class="number-choice" data-number="5">5</button>
+              </div>
+              <button class="primary-action gold-action" data-ladder-start disabled>START</button>
+            </div>
+
+            <div class="ladder-play ladder-view" data-ladder-view="play">
+              <div class="ladder-top">
+                <span data-ladder-top="1">1</span>
+                <span data-ladder-top="2">2</span>
+                <span data-ladder-top="3">3</span>
+                <span data-ladder-top="4">4</span>
+                <span data-ladder-top="5">5</span>
+              </div>
+              <div class="ladder-board">
+                <svg viewBox="0 0 500 520" role="img" aria-label="네온 사다리">
+                  <g class="ladder-lines">
+                    <path d="M70 20 L70 455" />
+                    <path d="M160 20 L160 455" />
+                    <path d="M250 20 L250 455" />
+                    <path d="M340 20 L340 455" />
+                    <path d="M430 20 L430 455" />
+                    <path d="M70 130 L160 130" />
+                    <path d="M250 205 L340 205" />
+                    <path d="M160 300 L250 300" />
+                    <path id="riggedBar" class="rigged-bar" d="" />
+                  </g>
+                  <path id="ladderTrace" class="ladder-trace" d="" />
+                  <path id="ladderRiggedTrace" class="ladder-trace rigged-trace" d="" />
+                  <circle class="trace-dot" r="8">
+                    <animateMotion dur="3s" begin="indefinite" fill="freeze" path="" />
+                  </circle>
+                </svg>
+              </div>
+              <div class="result-row">
+                <span data-ladder-result="1">꽝</span>
+                <span data-ladder-result="2">꽝</span>
+                <span data-ladder-result="3">꽝</span>
+                <span data-ladder-result="4">성공</span>
+                <span data-ladder-result="5">꽝</span>
+              </div>
+            </div>
+
+            <div class="warning-view ladder-view" data-ladder-view="warning">
+              <div class="warning-sign" aria-hidden="true">!</div>
+              <h2>속지 마!</h2>
+              <p>한 번의 선택이 돌이킬 수 없게 됩니다</p>
+              <strong>도박 문제 상담 1336</strong>
+              <button class="dark-action" data-reset>처음으로</button>
+            </div>
+          </article>
+
+          <aside class="guide-panel ladder-guide">
+            <div class="guide-ladder" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <h2>사다리타기</h2>
+            <p>번호를 선택하고 사다리를 따라 결과를 확인하세요.</p>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

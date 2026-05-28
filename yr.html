@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>야바위 게임</title>
+  <style>
+    body {
+        background-color: rgb(35, 35, 35);
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+
+    .hidden { display: none; }
+    .cups {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      margin: 30px 0;
+      position: relative;
+      height: 220px;
+    }
+
+    .cup {
+      width: 160px;
+      height: 200px;
+      background: rgb(194, 194, 194);
+      color: white;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+      user-select: none;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    button {
+      margin: 6px;
+      padding: 8px 16px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1 style="color: white;font-size: 50px;">미친 야바위</h1>
+
+<div id="select">
+  <p style="color:white;font-size: 25px;">난이도를 선택하세요!<br>별이 많을수록 어렵습니다.</p>
+  <button style="font-size:20px; padding:12px 24px;" onclick="setLevel('easy')">⭐️⭐️⭐️ (3컵)</button>
+  <button style="font-size:20px; padding:12px 24px;" onclick="setLevel('medium')">⭐️⭐️⭐️⭐️ (4컵)</button>
+  <button style="font-size:20px; padding:12px 24px;" onclick="setLevel('hard')">⭐️⭐️⭐️⭐️⭐️ (6컵)</button>
+</div>
+
+<div id="game" class="hidden">
+  <div class="cups" id="cups"></div>
+  <button style="font-size:20px; padding:12px 24px;" id="startBtn">게임 시작</button>
+  <p style="color: white;" id="result"></p>
+</div>
+
+<script>
+let level = null;
+let cupCount = 0;
+let cups = [];
+let shuffling = false;
+let finished = false;
+
+const speedMap = { easy: 300, medium: 260, hard: 210 };
+const shuffleCounts = { easy: 20, medium: 40, hard: 60 };
+
+const selectDiv = document.getElementById('select');
+const gameDiv = document.getElementById('game');
+const cupsDiv = document.getElementById('cups');
+const startBtn = document.getElementById('startBtn');
+const resultP = document.getElementById('result');
+
+function setLevel(lv) {
+  level = lv;
+  cupCount = lv === 'easy' ? 3 : lv === 'medium' ? 4 : 6;
+  initGame();
+  selectDiv.classList.add('hidden');
+  gameDiv.classList.remove('hidden');
+}
+
+function initGame() {
+  cups = Array.from({ length: cupCount }, (_, i) => ({ id: i, hasReward: false }));
+  const rewardIndex = Math.floor(Math.random() * cupCount);
+  cups[rewardIndex].hasReward = true;
+  finished = false;
+  resultP.textContent = '게임 시작을 누르시면 컵이 섞입니다!';
+  startBtn.style.display = 'inline-block';
+  renderCups(true); // 게임 시작 전 보상 보이기
+}
+
+function renderCups(showReward, selectedIndex = -1) {
+  cupsDiv.innerHTML = '';
+  cups.forEach((cup, idx) => {
+    const div = document.createElement('div');
+    div.className = 'cup';
+    
+    // 사용자가 선택한 컵인 경우 배경색 변경
+    if (idx === selectedIndex) {
+      div.style.backgroundColor = '#f39c12'; // 강조하고 싶은 색상
+      div.style.border = '4px solid white'; // 테두리까지 추가하면 더 명확합니다
+    }
+
+    if (showReward && cup.hasReward) {
+      const img = document.createElement('img');
+      img.src = 'reward.png';
+      div.appendChild(img);
+    } else {
+      div.textContent = '🥤';
+      div.style.fontSize = '130px';
+    }
+    div.onclick = () => selectCup(cups.indexOf(cup));
+    cupsDiv.appendChild(div);
+  });
+}
+
+function selectCup(index) {
+  if (!finished || shuffling) return;
+  finished = false;
+  
+  if (cups[index].hasReward) {
+    resultP.textContent = '정답! 🎉';
+  } else {
+    resultP.textContent = '틀렸습니다 😢';
+  }
+  
+  // 두 번째 인자로 클릭한 index를 전달합니다
+  renderCups(true, index);
+  startBtn.style.display = 'inline-block';
+}
+  
+
+startBtn.onclick = () => {
+  if (shuffling) return;
+  finished = false;
+  resultP.textContent = '컵을 섞고 있습니다...';
+  startBtn.style.display = 'none';
+  renderCups(false); // 버튼 누르면 보상 숨김
+  shuffleAnimation();
+};
+
+// 두 컵의 위치를 물리적으로 교체하는 함수
+function swapCups(i, j) {
+  return new Promise((resolve) => {
+    const cupElements = document.querySelectorAll('.cup');
+    const cupI = cupElements[i];
+    const cupJ = cupElements[j];
+
+    // 현재 위치의 차이(거리) 계산
+    const rectI = cupI.getBoundingClientRect();
+    const rectJ = cupJ.getBoundingClientRect();
+    const distance = rectJ.left - rectI.left;
+
+    // 부드러운 이동을 위한 트랜지션 설정
+    const duration = speedMap[level];
+    cupI.style.transition = `transform ${duration}ms ease-in-out`;
+    cupJ.style.transition = `transform ${duration}ms ease-in-out`;
+
+    // 시각적으로 이동
+    cupI.style.transform = `translateX(${distance}px)`;
+    cupJ.style.transform = `translateX(${-distance}px)`;
+
+    // 애니메이션이 끝나면 실제 DOM 순서 교체
+    setTimeout(() => {
+      // 트랜지션 초기화 및 transform 제거
+      cupI.style.transition = 'none';
+      cupJ.style.transition = 'none';
+      cupI.style.transform = '';
+      cupJ.style.transform = '';
+
+      // 배열 데이터 교체
+      [cups[i], cups[j]] = [cups[j], cups[i]];
+
+      // HTML 요소 실제 위치 교체 (i가 j보다 앞에 있다고 가정)
+      const nextI = cupI.nextSibling;
+      const nextJ = cupJ.nextSibling;
+      
+      if (nextI === cupJ) {
+        cupsDiv.insertBefore(cupJ, cupI);
+      } else {
+        cupsDiv.insertBefore(cupI, nextJ);
+        cupsDiv.insertBefore(cupJ, nextI);
+      }
+      
+      resolve();
+    }, duration);
+  });
+}
+
+// 셔플 애니메이션 메인 함수
+async function shuffleAnimation() {
+  shuffling = true;
+  let moves = shuffleCounts[level];
+
+  for (let k = 0; k < moves; k++) {
+    const i = Math.floor(Math.random() * cupCount);
+    let j = Math.floor(Math.random() * cupCount);
+    while (j === i) j = Math.floor(Math.random() * cupCount);
+
+    // 한 번의 교체가 끝날 때까지 기다림
+    await swapCups(i, j);
+  }
+
+  shuffling = false;
+  finished = true;
+  resultP.textContent = '컵을 선택하세요!';
+}
+
+function selectCup(index) {
+  if (!finished || shuffling) return;
+  finished = false;
+  if (cups[index].hasReward) {
+    resultP.textContent = '정답! 🎉';
+  } else {
+    resultP.textContent = '틀렸습니다 😢';
+  }
+  renderCups(true);
+  startBtn.style.display = 'inline-block';
+}
+</script>
+
+</body>
+</html>
