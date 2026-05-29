@@ -60,7 +60,7 @@ const swapShellCups = (first, second) => {
     const firstRect = firstCup.getBoundingClientRect();
     const secondRect = secondCup.getBoundingClientRect();
     const distance = secondRect.left - firstRect.left;
-    const duration = 620;
+    const duration = 460;
 
     firstCup.style.transition = `transform ${duration}ms ease-in-out`;
     secondCup.style.transition = `transform ${duration}ms ease-in-out`;
@@ -95,7 +95,7 @@ const swapShellCups = (first, second) => {
 };
 
 const shuffleShellCups = async () => {
-  for (let count = 0; count < 12; count += 1) {
+  for (let count = 0; count < 14; count += 1) {
     const first = Math.floor(Math.random() * shellCups.length);
     let second = Math.floor(Math.random() * shellCups.length);
 
@@ -144,17 +144,26 @@ const selectShellCup = (selectedIndex, selectedButton) => {
     if (emptyCup) emptyCup.hasReward = true;
   }
 
+  const rewardIndex = shellCups.findIndex((cup) => cup.hasReward);
+  const rewardButton = shellCupsDiv?.querySelectorAll(".cup-choice")[rewardIndex];
+  rewardButton?.classList.add("reveal-reward");
+
   window.setTimeout(() => {
     showOnly(".shell-view", "warning");
-  }, 850);
+  }, 1400);
 };
 
 let selectedNumber = null;
 const ladderColumns = [70, 160, 250, 340, 430];
 const baseLadderBars = [
+  { y: 88, from: 3 },
   { y: 130, from: 0 },
-  { y: 205, from: 2 },
+  { y: 190, from: 2 },
+  { y: 245, from: 0 },
   { y: 300, from: 1 },
+  { y: 355, from: 3 },
+  { y: 378, from: 2 },
+  { y: 392, from: 0 },
 ];
 const originalLadderResults = ["꽝", "꽝", "꽝", "꽝", "꽝"];
 
