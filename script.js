@@ -183,11 +183,14 @@ const buildLadderPath = (startNumber) => {
   });
 
   const barY = 450;
+  const successColumn = column;
   const endColumn = column === ladderColumns.length - 1 ? column - 1 : column + 1;
   path += ` L${ladderColumns[column]} ${barY}`;
 
   return {
     path,
+    normalPath: `${path} L${ladderColumns[column]} 455`,
+    successColumn,
     endColumn,
     riggedBarPath: `M${ladderColumns[column]} ${barY} L${ladderColumns[endColumn]} ${barY}`,
     riggedTracePath: `M${ladderColumns[column]} ${barY} L${ladderColumns[endColumn]} ${barY} L${ladderColumns[endColumn]} 455`,
@@ -252,7 +255,9 @@ if (ladderStart) {
     const riggedTrace = document.querySelector("#ladderRiggedTrace");
     const motion = document.querySelector(".trace-dot animateMotion");
     const riggedBar = document.querySelector("#riggedBar");
-    const { path, endColumn, riggedBarPath, riggedTracePath } = buildLadderPath(selectedNumber);
+    const { path, normalPath, successColumn, endColumn, riggedBarPath, riggedTracePath } = buildLadderPath(selectedNumber);
+    const usesRiggedPath = selectedNumber === 2;
+    const mainPath = usesRiggedPath ? path : normalPath;
 
     showOnly(".ladder-view", "play");
     app?.classList.add("game-running");
@@ -261,15 +266,17 @@ if (ladderStart) {
     if (riggedBar) riggedBar.setAttribute("d", riggedBarPath);
 
     if (trace && motion) {
-      trace.setAttribute("d", path);
+      trace.setAttribute("d", mainPath);
       trace.classList.remove("play");
-      motion.setAttribute("path", path);
+      motion.setAttribute("path", mainPath);
       motion.setAttribute("dur", "5s");
       drawTrace(trace, 5000);
       motion.beginElement();
     }
 
     window.setTimeout(() => {
+      if (!usesRiggedPath) return;
+
       riggedBar?.classList.add("active");
       if (riggedTrace) {
         riggedTrace.setAttribute("d", riggedTracePath);
@@ -284,14 +291,15 @@ if (ladderStart) {
     }, 5000);
 
     window.setTimeout(() => {
-      const result = document.querySelector(`[data-ladder-result="${endColumn + 1}"]`);
+      const resultColumn = usesRiggedPath ? endColumn : successColumn;
+      const result = document.querySelector(`[data-ladder-result="${resultColumn + 1}"]`);
       if (result) {
         result.textContent = "꽝";
         result.classList.add("active", "rigged");
       }
-    }, 7900);
+    }, usesRiggedPath ? 7900 : 5200);
 
-    window.setTimeout(() => showOnly(".ladder-view", "warning"), 9300);
+    window.setTimeout(() => showOnly(".ladder-view", "warning"), usesRiggedPath ? 9300 : 6600);
   });
 }
 
