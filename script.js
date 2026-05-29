@@ -182,7 +182,7 @@ const buildLadderPath = (startNumber) => {
     path += ` L${ladderColumns[column]} ${bar.y}`;
   });
 
-  const barY = 405;
+  const barY = 450;
   const endColumn = column === ladderColumns.length - 1 ? column - 1 : column + 1;
   path += ` L${ladderColumns[column]} ${barY}`;
 
@@ -264,8 +264,8 @@ if (ladderStart) {
       trace.setAttribute("d", path);
       trace.classList.remove("play");
       motion.setAttribute("path", path);
-      motion.setAttribute("dur", "3s");
-      drawTrace(trace, 3000);
+      motion.setAttribute("dur", "5s");
+      drawTrace(trace, 5000);
       motion.beginElement();
     }
 
@@ -278,10 +278,10 @@ if (ladderStart) {
       }
       if (motion) {
         motion.setAttribute("path", riggedTracePath);
-        motion.setAttribute("dur", "2s");
+        motion.setAttribute("dur", "2.8s");
         motion.beginElement();
       }
-    }, 3000);
+    }, 5000);
 
     window.setTimeout(() => {
       const result = document.querySelector(`[data-ladder-result="${endColumn + 1}"]`);
@@ -289,9 +289,9 @@ if (ladderStart) {
         result.textContent = "꽝";
         result.classList.add("active", "rigged");
       }
-    }, 5100);
+    }, 7900);
 
-    window.setTimeout(() => showOnly(".ladder-view", "warning"), 6500);
+    window.setTimeout(() => showOnly(".ladder-view", "warning"), 9300);
   });
 }
 
