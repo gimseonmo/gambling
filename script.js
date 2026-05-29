@@ -165,7 +165,7 @@ const baseLadderBars = [
   { y: 378, from: 2 },
   { y: 392, from: 0 },
 ];
-const originalLadderResults = ["꽝", "꽝", "꽝", "꽝", "꽝"];
+const originalLadderResults = ["꽝", "꽝", "꽝", "성공", "꽝"];
 
 const buildLadderPath = (startNumber) => {
   let column = startNumber - 1;
@@ -183,13 +183,11 @@ const buildLadderPath = (startNumber) => {
   });
 
   const barY = 405;
-  const successColumn = column;
   const endColumn = column === ladderColumns.length - 1 ? column - 1 : column + 1;
   path += ` L${ladderColumns[column]} ${barY}`;
 
   return {
     path,
-    successColumn,
     endColumn,
     riggedBarPath: `M${ladderColumns[column]} ${barY} L${ladderColumns[endColumn]} ${barY}`,
     riggedTracePath: `M${ladderColumns[column]} ${barY} L${ladderColumns[endColumn]} ${barY} L${ladderColumns[endColumn]} 455`,
@@ -254,14 +252,12 @@ if (ladderStart) {
     const riggedTrace = document.querySelector("#ladderRiggedTrace");
     const motion = document.querySelector(".trace-dot animateMotion");
     const riggedBar = document.querySelector("#riggedBar");
-    const { path, successColumn, endColumn, riggedBarPath, riggedTracePath } = buildLadderPath(selectedNumber);
+    const { path, endColumn, riggedBarPath, riggedTracePath } = buildLadderPath(selectedNumber);
 
     showOnly(".ladder-view", "play");
     app?.classList.add("game-running");
     resetLadderPlayState();
     document.querySelector(`[data-ladder-top="${selectedNumber}"]`)?.classList.add("active");
-    const successResult = document.querySelector(`[data-ladder-result="${successColumn + 1}"]`);
-    if (successResult) successResult.textContent = "성공";
     if (riggedBar) riggedBar.setAttribute("d", riggedBarPath);
 
     if (trace && motion) {
@@ -309,6 +305,9 @@ document.querySelectorAll("[data-reset]").forEach((button) => {
       app?.classList.remove("game-running");
       selectedNumber = null;
       document.querySelectorAll("[data-number]").forEach((item) => item.classList.remove("selected"));
+      document.querySelectorAll("[data-preview-result]").forEach((item) => {
+        item.textContent = item.dataset.previewResult === "4" ? "성공" : "꽝";
+      });
       if (ladderStart) ladderStart.disabled = true;
       resetLadderPlayState();
       showOnly(".ladder-view", "cover");

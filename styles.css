@@ -614,6 +614,34 @@ a {
   border-color: #ffd400;
 }
 
+.cover-ladder-preview {
+  width: min(520px, 86%);
+  margin-top: clamp(18px, 3vw, 28px);
+}
+
+.cover-ladder-preview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.preview-result {
+  display: flex;
+  gap: clamp(7px, 1vw, 12px);
+  margin-top: 8px;
+}
+
+.preview-result span {
+  display: grid;
+  flex: 1;
+  min-height: 38px;
+  place-items: center;
+  border: 1px solid rgba(255, 212, 71, 0.72);
+  border-radius: 8px;
+  color: #fff0a3;
+  font-weight: 850;
+}
+
 .ladder-play {
   flex-direction: column;
   gap: clamp(12px, 2vw, 22px);
